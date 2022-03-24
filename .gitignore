@@ -16,3 +16,4 @@ database/development.sqlite
 
 #fronts
 public/fronts
+data/
