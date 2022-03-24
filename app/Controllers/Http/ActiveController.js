@@ -1,7 +1,7 @@
 'use strict'
 const ServiceController = require("./ServiceController");
 const Env               = use('Env');
-
+const Contact           = use('App/Models/Contact');
 /**
  * CheckoutRestController
  */
@@ -14,6 +14,7 @@ class ActiveController extends ServiceController {
     super({urlDestiny:Env.get('ACTIVE_API_URL')})
     this.urlDestiny = Env.get('ACTIVE_API_URL');
     this.tokenApi   = Env.get('ACTIVE_API_TOKEN');
+    this.repository = Contact;
   }
 
   /**
@@ -25,14 +26,13 @@ class ActiveController extends ServiceController {
   async store({request, response}){
     try {
       const data = request.only(['email', 'name','id']);
-
       let body = JSON.stringify({
         "contact": {
           "email":     data.email,
           "firstName": data.name,
           "lastName":  data.id
         }});
-
+      this.repository.create(data);
      return await this.send(this.urlDestiny + '/api/3/contact/sync', request.method(),{'Api-Token': this.tokenApi, 'Content-Type': 'application/json'}, body);
 
     } catch (error) {

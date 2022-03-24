@@ -1,12 +1,37 @@
-version: "3.3"
+version: "3.7"
 services:
-    ms_active:
-        restart: unless-stopped
-        build:
-            context: /.
-            dockerfile: Dockerfile
-        volumes:
-            - ./:/app
-        ports:
-            - 3333:80
-      
+  ms_active:
+    restart: unless-stopped
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    volumes:
+      - ./:/app
+    links:
+      - mongo
+    ports:
+      - 3333:80
+    networks:
+      - active
+
+  mongo:
+    image: mongo
+    restart: always
+    volumes:
+      - ./data/db:/data/db
+    networks:
+      - active
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    links:
+      - mongo
+    networks:
+      - active
+
+networks:
+  active:
+    driver: bridge

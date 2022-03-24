@@ -1,4 +1,4 @@
-FROM node:14
+FROM node:alpine
 WORKDIR /app
 COPY . .
 RUN npm i -g @adonisjs/cli
